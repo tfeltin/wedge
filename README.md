@@ -15,3 +15,7 @@ This repository provides both docker-compose and kubernetes support and configur
 ## Example deployments
 
 To run sample deployments on docker-compose or kubernetes, follow the steps described in the respective folders.
+
+## Reference
+
+* *DNN Partitioning for Inference Throughput Acceleration at the Edge*, T. Feltin, L. Marché, J-A. Cordero-Fuertes, F. Brockners and T. H. Clausen, in IEEE Access, vol. 11, pp. 52236-52249, 2023, doi: [10.1109/ACCESS.2023.3244497](https://ieeexplore.ieee.org/document/10042405)
