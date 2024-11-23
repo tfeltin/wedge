@@ -1,0 +1,3 @@
+py-cpuinfo
+networkx
+onnx==1.11

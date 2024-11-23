@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wedge-orchestrator
+  labels:
+    run: wedge-orchestrator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: wedge-orchestrator
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        run: wedge-orchestrator
+    spec:
+      containers:
+        - name: wedge-orchestrator
+          image: docker.io/tfeltin/wedge-orchestrator
+          ports:
+            - containerPort: 6869
+            - containerPort: 6967
+          args:
+            - python
+            - -u
+            - main.py
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orchestrator
+spec:
+  ports:
+    - name: "orchestrator-api"
+      port: 6968
+      targetPort: 6968
+      nodePort: 30006
+    - name: "orchestrator-sync"
+      port: 6869
+      targetPort: 6869
+    - name: "orchestrator-register"
+      port: 6967
+      targetPort: 6967
+  selector:
+    run: wedge-orchestrator
+  type: LoadBalancer
+status:
+  loadBalancer: {}

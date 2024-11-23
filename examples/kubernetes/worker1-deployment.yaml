@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wedge-worker1
+  labels:
+    run: wedge-worker1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: wedge-worker1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        run: wedge-worker1
+    spec:
+      containers:
+        - name: wedge-worker
+          image: docker.io/tfeltin/wedge-worker
+          ports:
+            - containerPort: 6868
+            - containerPort: 6869
+            - containerPort: 5201
+          env:
+            - name: ORCHESTRATOR
+              value: "orchestrator"
+          args:
+            - python
+            - -u
+            - main.py
+          resources: {}
+      restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: worker1
+spec:
+  ports:
+    - name: "worker1-tcp"
+      port: 6868
+      targetPort: 6868
+    - name: "worker1-sync"
+      port: 6869
+      targetPort: 6869
+    - name: "worker1-bandwidth"
+      port: 5201
+      targetPort: 5201
+  selector:
+    run: wedge-worker1
+status:
+  loadBalancer: {}

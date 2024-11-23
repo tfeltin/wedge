@@ -1,0 +1,51 @@
+version: '3.3'
+
+services:
+
+ _worker_build:
+    image: wedge-worker
+    build:
+      context: ../../wedge-worker
+      dockerfile: Dockerfile.cpu
+    command: "echo 'build complete'"
+
+ worker0:
+    image: wedge-worker
+    restart: always
+    container_name: wedge-worker0
+    environment:
+       - "ORCHESTRATOR=orchestrator"
+    depends_on:
+    - "_worker_build"
+    - "orchestrator"
+    command: "python -u main.py"
+
+ worker1:
+    image: wedge-worker
+    restart: always
+    container_name: wedge-worker1
+    environment:
+       - "ORCHESTRATOR=orchestrator"
+    depends_on:
+    - "_worker_build"
+    - "orchestrator"
+    command: "python -u main.py"
+
+ orchestrator:
+    image: wedge-orchestrator
+    expose:
+      - "6968"
+      - "6967"
+    ports:
+      - "6968:6968"
+      - "6967:6967"
+    build:
+      context: ../../wedge-orchestrator
+      dockerfile: Dockerfile.cpu
+    restart: always
+    container_name: wedge-orchestrator
+    command: "python -u main.py"
+
+networks:
+  default:
+    name: wedge-demo
